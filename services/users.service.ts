@@ -9,12 +9,12 @@ export const api = axios.create({
 export const getUsers = (): AxiosCall<any> => {
   const controller = new AbortController()
 
-  const call: Promise<AxiosResponse<any>> = api
+  const call: Promise<void | AxiosResponse<any>> = api
     .get('/users.json', {
       signal: controller.signal,
     })
     .then((response) => {
-      return response.data
+      return response
     })
     .catch((error) => {
       console.error(error.message)
@@ -29,21 +29,14 @@ export const getUsers = (): AxiosCall<any> => {
 export const postUser = ({ user }: { user: User }): AxiosCall<any> => {
   const controller = new AbortController()
 
-  const data = JSON.stringify({
-    dni: user.dni,
-    email: user.email,
-    genre: user.genre,
-    last: user.last,
-    loanStatus: user.loanStatus,
-    name: user.name,
-  })
+  const data = JSON.stringify(user)
 
-  const call: Promise<AxiosResponse<any>> = api
+  const call: Promise<void | AxiosResponse<any>> = api
     .post('/users.json', data, {
       signal: controller.signal,
     })
     .then((response) => {
-      return response.data
+      return response
     })
     .catch((error) => {
       console.error(error.message)
@@ -70,7 +63,7 @@ export const deleteUser = ({ id }: { id: string }): AxiosCall<any> => {
     })
 
   return {
-    call: call as Promise<AxiosResponse<any>>,
+    call: call,
     controller: controller,
   }
 }
