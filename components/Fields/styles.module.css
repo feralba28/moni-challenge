@@ -1,0 +1,19 @@
+.container {
+  @apply pb-5 relative tracking-tight;
+}
+
+.label {
+  @apply block text-xs text-gray-900 font-medium pb-1 lg:text-sm;
+}
+
+.field {
+  @apply w-full text-sm text-primary-dark font-medium outline-none border border-gray-300 px-3 py-2 rounded shadow-sm focus:border-accent focus:ring-1 focus:ring-accent lg:text-base;
+}
+
+.error {
+  @apply absolute bottom-0 left-0;
+}
+
+.errortext {
+  @apply text-xs text-red-500 font-medium lg:text-sm;
+}
