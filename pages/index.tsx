@@ -1,43 +1,37 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
+
+import LinkButton from '@/components/LinkButton'
+import PageLayout from '@/components/PageLayout'
 
 const Home: NextPage = () => {
   return (
-    <div className="min-h-full bg-neutral">
+    <>
       <Head>
-        <title>Préstamos en efectivo | Moni | Argentina</title>
-        <meta
-          name="description"
-          content="Préstamos en efectivo. Pedime hasta $130.000 pesos y te deposito en el momento. Fácil y rápido."
-        />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Moni | Argentina</title>
       </Head>
 
-      <header>
-        <Image
-          src="/moni-logo-primary.svg"
-          alt="Moni Logo"
-          width={80}
-          height={30}
-        />
-      </header>
+      <PageLayout>
+        <main className="container mx-auto p-5 grow flex justify-center items-center">
+          <div className="flex flex-col items-center gap-6">
+            <h2 className="text-slate-300 text-lg text-center font-semibold tracking-tight lg:text-xl">
+              Préstamos online
+            </h2>
+            <h1 className="text-primary text-3xl text-center font-black uppercase tracking-tighter max-w-xl m-auto lg:text-4xl">
+              ¡Recibí plata en tu cuenta en un toque!
+            </h1>
 
-      <main>
-        <h1 className="text-primary text-4xl font-black uppercase tracking-tighter">
-          ¡Recibí plata en tu cuenta en un toque!
-        </h1>
-      </main>
+            <LinkButton to="/prestamos" variant="primary">
+              Quiero un préstamo
+            </LinkButton>
 
-      <footer className="bg-primary-dark">
-        <Image
-          src="/moni-logo-secondary.svg"
-          alt="Moni Logo"
-          width={80}
-          height={30}
-        />
-      </footer>
-    </div>
+            <LinkButton to="/solicitudes" variant="secondary">
+              Ver solicitudes
+            </LinkButton>
+          </div>
+        </main>
+      </PageLayout>
+    </>
   )
 }
 
