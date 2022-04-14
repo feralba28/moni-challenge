@@ -3,16 +3,16 @@ import Head from 'next/head'
 
 import { Formik, Form, FormikHelpers } from 'formik'
 
-import { SelectField, TextField } from '@/components/Fields'
-
+import { createScoreAdapter } from '@/adapters/score.adapter'
+import { createPostUserAdapter } from '@/adapters/user.adapter'
 import Button from '@/components/Button'
+import { SelectField, TextField } from '@/components/Fields'
 import PageLayout from '@/components/PageLayout'
+import useFetch from '@/hooks/useFetch'
 import { FormValues } from '@/models/form-values.model'
-import { Score } from '@/models/score.model'
-import { User } from '@/models/user.model'
-import { userSchema } from '@/validations/user.validation'
 import { postUser } from '@/services/users.service'
 import { getScoring } from '@/services/scoring.service'
+import { userSchema } from '@/validations/user.validation'
 
 const initialValues: FormValues = {
   firstName: '',
@@ -23,24 +23,35 @@ const initialValues: FormValues = {
 }
 
 const Prestamos: NextPage = () => {
-  const onSubmit = (
+  const { callEndpoint: callGetScoring } = useFetch()
+  const { callEndpoint: callPostUser } = useFetch()
+
+  const onSubmit = async (
     values: FormValues,
     { setSubmitting, resetForm }: FormikHelpers<FormValues>
   ) => {
-    getScoring({ dni: values.dni })
-      .then((response) => {
-        // const status = response.data.status == 'approve' ? 'APROVED' : 'REJECTED'
-        // setFormValues(values)
-        // const score: Score = {
-        //   status: status,
-        // }
-        // setScore(score)
-        console.log(response)
-      })
-      .finally(() => {
-        setSubmitting(false)
-        resetForm()
-      })
+    try {
+      const getResponse = await callGetScoring(getScoring({ dni: values.dni }))
+      const score = createScoreAdapter(getResponse)
+      const postResponse = await callPostUser(
+        postUser({
+          user: createPostUserAdapter(values, score),
+        })
+      )
+
+      if (postResponse.status == 200) {
+        console.log(
+          `Solicitud enviada con éxito. El estado de su solicitud es: ${
+            score.status === 'APROVED' ? 'APROBADA' : 'RECHAZADA'
+          }`
+        )
+      }
+
+      setSubmitting(false)
+      resetForm()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -80,6 +91,8 @@ const Prestamos: NextPage = () => {
                 <Button variant="accent" type="submit" disabled={isSubmitting}>
                   Solicitar
                 </Button>
+
+                {isSubmitting && <div>Spinner</div>}
               </Form>
             )}
           </Formik>
