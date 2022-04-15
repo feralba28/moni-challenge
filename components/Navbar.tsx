@@ -14,6 +14,7 @@ function Navbar(): JSX.Element {
                 width={80}
                 height={30}
                 layout="responsive"
+                priority={true}
               />
             </div>
           </a>

@@ -14,6 +14,7 @@ function Footer(): JSX.Element {
             width={80}
             height={30}
             layout="responsive"
+            priority={false}
           />
         </div>
       </div>
