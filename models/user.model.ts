@@ -1,5 +1,4 @@
 export interface User {
-  id?: string,
   dni: string
   email: string
   genre: string
@@ -7,3 +6,5 @@ export interface User {
   loanStatus: string
   name: string
 }
+
+export type Users = Map<string, User>
