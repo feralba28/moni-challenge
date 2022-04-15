@@ -1,11 +1,11 @@
 import { Score } from '@/models/score.model'
 
-const formatStatus = (status: string): string => {
-  return status == 'approve' ? 'APROVED' : 'REJECTED'
+export const formatStatus = (status: string): string => {
+  return status === 'APROVED' ? 'APROBADA' : 'RECHAZADA'
 }
 
 export const createScoreAdapter = (score: any): Score => {
   return {
-    status: formatStatus(score.data.status),
+    status: score.data.status === 'approve' ? 'APROVED' : 'REJECTED'
   }
 }
