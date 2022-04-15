@@ -1,0 +1,12 @@
+.btn {
+  @apply px-2 py-1 bg-transparent rounded text-sm text-center font-semibold border border-gray-300
+  tracking-tight transition hover:shadow-md duration-300 ease-out lg:text-base;
+}
+
+.accent {
+  @apply text-accent hover:border-accent;
+}
+
+.warning {
+  @apply text-red-500 hover:border-red-500;
+}
