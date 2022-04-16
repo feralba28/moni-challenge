@@ -67,3 +67,31 @@ export const deleteUser = ({ id }: { id: string }): AxiosCall<any> => {
     controller: controller,
   }
 }
+
+export const updateUser = ({
+  id,
+  user,
+}: {
+  id: string
+  user: User
+}): AxiosCall<any> => {
+  const controller = new AbortController()
+
+  const data = JSON.stringify(user)
+
+  const call: Promise<void | AxiosResponse<any>> = api
+    .put(`/users/${id}.json`, data, {
+      signal: controller.signal,
+    })
+    .then((response) => {
+      return response
+    })
+    .catch((error) => {
+      console.error(error.message)
+    })
+
+  return {
+    call: call,
+    controller: controller,
+  }
+}
