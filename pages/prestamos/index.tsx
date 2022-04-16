@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 
 import { Formik, Form, FormikHelpers } from 'formik'
+import ClipLoader from 'react-spinners/ClipLoader'
 
 import { createScoreAdapter } from '@/adapters/score.adapter'
 import { createPostUserAdapter } from '@/adapters/user.adapter'
@@ -35,7 +36,7 @@ const Prestamos: NextPage = () => {
       const score = createScoreAdapter(getResponse)
       const postResponse = await callPostUser(
         postUser({
-          user: createPostUserAdapter(values, score),
+          user: createPostUserAdapter(values, score.status),
         })
       )
 
@@ -92,7 +93,11 @@ const Prestamos: NextPage = () => {
                   Solicitar
                 </Button>
 
-                {isSubmitting && <div>Spinner</div>}
+                {isSubmitting && (
+                  <div className="flex justify-center mt-1">
+                    <ClipLoader loading={true} size={32} color="#5493e7" />
+                  </div>
+                )}
               </Form>
             )}
           </Formik>
