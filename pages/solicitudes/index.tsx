@@ -2,7 +2,7 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 
 import { useState } from 'react'
-import { AxiosResponse } from 'axios'
+import axios from 'axios'
 import { Formik, Form, FormikHelpers } from 'formik'
 import ClipLoader from 'react-spinners/ClipLoader'
 
@@ -35,7 +35,7 @@ const tableColums: Array<string> = [
   'Acciones',
 ]
 
-const Solicitudes: NextPage<{ users: any }> = ({ users: usersProp }) => {
+function Solicitudes({ users: usersProp }: { users: any }) {
   const [users, setUsers] = useState<Users>(() => createUsersAdapter(usersProp))
   const [isModal, setIsModal] = useState<boolean>(false)
   const [selectedUser, setSelectedUser] = useState<{
@@ -225,12 +225,13 @@ const Solicitudes: NextPage<{ users: any }> = ({ users: usersProp }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const users = await getUsers()
-    .call.then((response) => {
-      return (response as AxiosResponse).data
+  const users = await axios
+    .get('https://wired-torus-98413.firebaseio.com/users.json')
+    .then((response) => {
+      return response.data
     })
-    .catch((err) => {
-      console.error(err)
+    .catch((error) => {
+      console.error(error.message)
     })
 
   return {
