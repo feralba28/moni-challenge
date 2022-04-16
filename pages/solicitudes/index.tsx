@@ -35,7 +35,7 @@ const tableColums: Array<string> = [
   'Acciones',
 ]
 
-const Prestamos: NextPage<{ users: any }> = ({ users: usersProp }) => {
+const Solicitudes: NextPage<{ users: any }> = ({ users: usersProp }) => {
   const [users, setUsers] = useState<Users>(() => createUsersAdapter(usersProp))
   const [isModal, setIsModal] = useState<boolean>(false)
   const [selectedUser, setSelectedUser] = useState<{
@@ -240,4 +240,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-export default Prestamos
+export default Solicitudes
