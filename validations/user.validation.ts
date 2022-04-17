@@ -4,12 +4,12 @@ export const userSchema = yup.object().shape({
   firstName: yup
     .string()
     .max(15, 'El nombre debe ser menor a 15 caracteres')
-    .required('Requerido'),
+    .required('* Requerido'),
   lastName: yup
     .string()
-    .max(150, 'El nombre debe ser menor a 15 caracteres')
-    .required('Requerido'),
-  email: yup.string().email('Email inválido').required('Requerido'),
+    .max(15, 'El apellido debe ser menor a 15 caracteres')
+    .required('* Requerido'),
+  email: yup.string().email('Email inválido').required('* Requerido'),
   dni: yup
     .number()
     .integer('Ingrese el DNI sin puntos')
@@ -20,6 +20,6 @@ export const userSchema = yup.object().shape({
     .test('len', 'Mínimo 7 números', (val) => {
       return val ? val.toString().length >= 7 : true
     })
-    .required('Requerido'),
-    gender: yup.string().required('Requerido'),
+    .required('* Requerido'),
+    gender: yup.string().required('* Requerido'),
 })
