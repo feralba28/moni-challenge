@@ -1,11 +1,13 @@
+import { useRef, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
 import { Formik, Form, FormikHelpers } from 'formik'
 import ClipLoader from 'react-spinners/ClipLoader'
 
-import { createScoreAdapter } from '@/adapters/score.adapter'
+import { createScoreAdapter, formatStatus } from '@/adapters/score.adapter'
 import { createPostUserAdapter } from '@/adapters/user.adapter'
+import Alert, { AlertHandle, AlertProps } from '@/components/Alert'
 import Button from '@/components/Button'
 import { SelectField, TextField } from '@/components/Fields'
 import PageLayout from '@/components/PageLayout'
@@ -24,6 +26,11 @@ const initialValues: FormValues = {
 }
 
 const Prestamos: NextPage = () => {
+  const [alert, setAlert] = useState<AlertProps>({
+    message: '',
+    variant: 'success',
+  })
+  const alertRef = useRef<AlertHandle>(null)
   const { callEndpoint: callGetScoring } = useFetch()
   const { callEndpoint: callPostUser } = useFetch()
 
@@ -41,18 +48,24 @@ const Prestamos: NextPage = () => {
       )
 
       if (postResponse.status == 200) {
-        console.log(
-          `Solicitud enviada con éxito. El estado de su solicitud es: ${
-            score.status === 'APROVED' ? 'APROBADA' : 'RECHAZADA'
-          }`
-        )
+        setAlert({
+          message: `Solicitud enviada con éxito. El estado de su solicitud es: ${formatStatus(
+            score.status
+          )}`,
+          variant: 'success',
+        })
+        alertRef.current?.show()
       }
-
-      setSubmitting(false)
       resetForm()
     } catch (error) {
       console.error(error)
+      setAlert({
+        message: 'Ocurrió un error. Intente nuevamente',
+        variant: 'danger',
+      })
+      alertRef.current?.show()
     }
+    setSubmitting(false)
   }
 
   return (
@@ -101,6 +114,12 @@ const Prestamos: NextPage = () => {
               </Form>
             )}
           </Formik>
+
+          <Alert
+            message={alert.message}
+            variant={alert.variant}
+            ref={alertRef}
+          />
         </main>
       </PageLayout>
     </>
