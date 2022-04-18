@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import axios from 'axios'
 import { Formik, Form, FormikHelpers } from 'formik'
 import ClipLoader from 'react-spinners/ClipLoader'
@@ -12,8 +12,9 @@ import {
   createUserAdapter,
   createUsersAdapter,
 } from '@/adapters/user.adapter'
+import Alert, { AlertHandle, AlertProps } from '@/components/Alert'
 import Button from '@/components/Button'
-import CloseIcon from '@/components/CloseIcon'
+import { X } from '@/components/Icons'
 import { SelectField, TextField } from '@/components/Fields'
 import Modal from '@/components/Modal'
 import PageLayout from '@/components/PageLayout'
@@ -42,6 +43,11 @@ function Solicitudes({ users: usersProp }: { users: any }) {
     id: string
     user: User
   } | null>(null)
+  const [alert, setAlert] = useState<AlertProps>({
+    message: '',
+    variant: 'success',
+  })
+  const alertRef = useRef<AlertHandle>(null)
 
   const { loading, callEndpoint: callDeleteUser } = useFetch()
   const { callEndpoint: callUpdateUser } = useFetch()
@@ -53,10 +59,19 @@ function Solicitudes({ users: usersProp }: { users: any }) {
         const draft = users
         draft.delete(id)
         setUsers(draft)
-        console.log('Solicitud eliminada con éxito')
+        setAlert({
+          message: 'Solicitud eliminada con éxito',
+          variant: 'success',
+        })
+        alertRef.current?.show()
       }
     } catch (error) {
       console.error(error)
+      setAlert({
+        message: 'Ocurrió un error. Intente nuevamente',
+        variant: 'danger',
+      })
+      alertRef.current?.show()
     }
   }
 
@@ -80,13 +95,22 @@ function Solicitudes({ users: usersProp }: { users: any }) {
         const draft = users
         draft.set(id, createUserAdapter(response.data))
         setUsers(draft)
-        console.log('Los datos se actualizaron correctamente', response.data)
+        setAlert({
+          message: 'Los datos se actualizaron correctamente',
+          variant: 'success',
+        })
+        alertRef.current?.show()
+        setIsModal(false)
       }
     } catch (error) {
       console.error(error)
+      setAlert({
+        message: 'Ocurrió un error. Intente nuevamente',
+        variant: 'danger',
+      })
+      alertRef.current?.show()
     }
     setSubmitting(false)
-    setIsModal(false)
   }
 
   return (
@@ -179,10 +203,10 @@ function Solicitudes({ users: usersProp }: { users: any }) {
                       Editar solicitud
                     </p>
                     <button
-                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-sm p-1.5 dark:hover:bg-gray-600 dark:hover:text-white"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-sm p-1.5"
                       onClick={() => setIsModal(false)}
                     >
-                      <CloseIcon />
+                      <X />
                     </button>
                   </div>
 
@@ -218,6 +242,12 @@ function Solicitudes({ users: usersProp }: { users: any }) {
               )}
             </Formik>
           </Modal>
+
+          <Alert
+            message={alert.message}
+            variant={alert.variant}
+            ref={alertRef}
+          />
         </main>
       </PageLayout>
     </>

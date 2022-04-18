@@ -3,10 +3,12 @@ import * as yup from 'yup'
 export const userSchema = yup.object().shape({
   firstName: yup
     .string()
+    .matches(/^[aA-zZ\s]+$/, "Solo se permiten letras")
     .max(15, 'El nombre debe ser menor a 15 caracteres')
     .required('* Requerido'),
   lastName: yup
     .string()
+    .matches(/^[aA-zZ\s]+$/, "Solo se permiten letras")
     .max(15, 'El apellido debe ser menor a 15 caracteres')
     .required('* Requerido'),
   email: yup.string().email('Email inválido').required('* Requerido'),
