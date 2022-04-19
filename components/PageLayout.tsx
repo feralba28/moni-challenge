@@ -7,7 +7,7 @@ function PageLayout(props: { children: ReactNode }): JSX.Element {
   const { children } = props
 
   return (
-    <div className="min-h-full bg-neutral flex flex-col">
+    <div className="min-h-screen bg-neutral flex flex-col">
       <Navbar />
 
       {children}
